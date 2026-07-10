@@ -1,0 +1,47 @@
+{
+    "$schema": "https://getcomposer.org/schema.json",
+    "name": "net-code/laravel-kit",
+    "description": "Small, reusable conventions for building Laravel REST APIs: a Clock port, sort direction, paginated-response envelope, ISO country-code rule, an OpenAPI error-status attribute, and a base context service provider.",
+    "keywords": ["laravel", "api", "clock", "pagination", "ddd", "conventions"],
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.5",
+        "illuminate/contracts": "^13.0",
+        "illuminate/http": "^13.0",
+        "illuminate/support": "^13.0",
+        "symfony/intl": "^8.1"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.27",
+        "phpstan/phpstan": "^2.1",
+        "phpunit/phpunit": "^13.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "NetCode\\Kit\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "NetCode\\Kit\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "lint": "@php vendor/bin/pint",
+        "lint:test": "@php vendor/bin/pint --test",
+        "analyse": "@php vendor/bin/phpstan analyse",
+        "test": "@php vendor/bin/phpunit",
+        "check": [
+            "@lint:test",
+            "@analyse",
+            "@test"
+        ]
+    },
+    "config": {
+        "sort-packages": true,
+        "optimize-autoloader": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
