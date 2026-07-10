@@ -22,6 +22,7 @@ composer require net-code/laravel-kit
 | `NetCode\Kit\Http\PaginatedResponse` | Builds the `{meta, links}` half of a paginated JSON envelope from the request + page numbers. |
 | `NetCode\Kit\Validation\CountryCode` | Validation rule accepting any ISO 3166-1 alpha-2 country code. |
 | `NetCode\Kit\Documentation\ApiErrors` | Class attribute declaring the domain error HTTP statuses an endpoint may return, for OpenAPI generators (e.g. Scramble). |
+| `NetCode\Kit\Documentation\ApiTag` | Class attribute overriding an endpoint's OpenAPI tag (group), e.g. `#[ApiTag('Admin', 'Billing')]`. |
 | `NetCode\Kit\ContextServiceProvider` | Base service provider with `registerBindings()` / `bootContext()` hooks for modular-monolith bounded contexts. |
 
 ## Usage
@@ -56,22 +57,40 @@ If you use [Scramble](https://scramble.dedoc.co) for OpenAPI generation, the
 
 | Transformer | Purpose |
 |---|---|
-| `TagByNamespaceSegments` | Tags operations from configurable controller-namespace segments (e.g. `Billing / Invoices / Admin`). |
+| `TagByNamespace` | Tags each operation by its controller: an explicit `#[ApiTag]` wins, otherwise a resolver you supply computes the tag from the controller's namespace segments. |
 | `DocumentErrorResponses` | Documents RFC 9457 problem+json errors from middleware, write methods, and `#[ApiErrors(...)]`. Scope with a namespace prefix. |
 | `DocumentDataQueryParameters` | Documents GET query params for spatie `Data` request objects, which Scramble does not see natively. |
+
+`TagByNamespace` is convention-first (no annotation needed), with `#[ApiTag]` as a
+per-controller override. The resolver receives the split namespace and returns the tag —
+here, audience-first (`Admin / Billing`, `Client / Projects`), falling back to the context
+name when a controller has no audience subfolder:
 
 ```php
 use Dedoc\Scramble\Scramble;
 use NetCode\Kit\Scramble\DocumentDataQueryParameters;
 use NetCode\Kit\Scramble\DocumentErrorResponses;
-use NetCode\Kit\Scramble\TagByNamespaceSegments;
+use NetCode\Kit\Scramble\TagByNamespace;
 
 Scramble::configure()->withOperationTransformers([
-    new TagByNamespaceSegments(prefix: 'Contexts\\', segments: [1, 2]),
+    new TagByNamespace('Contexts\\', static function (array $segments): ?string {
+        $context = $segments[1] ?? null;
+
+        if ($context === null) {
+            return null;
+        }
+
+        $at = array_search('Controllers', $segments, true);
+        $audience = is_int($at) && isset($segments[$at + 2]) ? $segments[$at + 1] : null;
+
+        return $audience === null ? $context : $audience.' / '.$context;
+    }),
     new DocumentErrorResponses(namespacePrefix: 'Contexts\\'),
     $this->app->make(DocumentDataQueryParameters::class),
 ]);
 ```
+
+Any controller can opt out of the convention: `#[ApiTag('Reports')]` forces its group.
 
 ## License
 
