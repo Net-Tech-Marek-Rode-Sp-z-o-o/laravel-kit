@@ -13,9 +13,17 @@
         "symfony/intl": "^8.1"
     },
     "require-dev": {
+        "dedoc/scramble": "^0.13",
+        "illuminate/routing": "^13.0",
+        "illuminate/translation": "^13.0",
         "laravel/pint": "^1.27",
         "phpstan/phpstan": "^2.1",
-        "phpunit/phpunit": "^13.2"
+        "phpunit/phpunit": "^13.2",
+        "spatie/laravel-data": "^4.23"
+    },
+    "suggest": {
+        "dedoc/scramble": "To use the NetCode\\Kit\\Scramble\\* OpenAPI operation transformers",
+        "spatie/laravel-data": "Required by the DocumentDataQueryParameters transformer (spatie Data query inputs)"
     },
     "autoload": {
         "psr-4": {

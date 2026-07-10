@@ -48,6 +48,31 @@ use NetCode\Kit\Validation\CountryCode;
 $request->validate(['country' => ['required', new CountryCode]]);
 ```
 
+## Scramble (optional)
+
+If you use [Scramble](https://scramble.dedoc.co) for OpenAPI generation, the
+`NetCode\Kit\Scramble\*` operation transformers are available (install
+`dedoc/scramble`, and `spatie/laravel-data` for the query-parameter bridge):
+
+| Transformer | Purpose |
+|---|---|
+| `TagByNamespaceSegments` | Tags operations from configurable controller-namespace segments (e.g. `Billing / Invoices / Admin`). |
+| `DocumentErrorResponses` | Documents RFC 9457 problem+json errors from middleware, write methods, and `#[ApiErrors(...)]`. Scope with a namespace prefix. |
+| `DocumentDataQueryParameters` | Documents GET query params for spatie `Data` request objects, which Scramble does not see natively. |
+
+```php
+use Dedoc\Scramble\Scramble;
+use NetCode\Kit\Scramble\DocumentDataQueryParameters;
+use NetCode\Kit\Scramble\DocumentErrorResponses;
+use NetCode\Kit\Scramble\TagByNamespaceSegments;
+
+Scramble::configure()->withOperationTransformers([
+    new TagByNamespaceSegments(prefix: 'Contexts\\', segments: [1, 2]),
+    new DocumentErrorResponses(namespacePrefix: 'Contexts\\'),
+    $this->app->make(DocumentDataQueryParameters::class),
+]);
+```
+
 ## License
 
 MIT
