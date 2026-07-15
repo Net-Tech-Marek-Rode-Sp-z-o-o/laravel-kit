@@ -20,6 +20,7 @@ composer require net-code/laravel-kit
 | `NetCode\Kit\Clock` / `SystemClock` | Injectable time port + system implementation. Bind `Clock` to `SystemClock` (or a fixed clock in tests). |
 | `NetCode\Kit\SortDirection` | `asc` / `desc` string enum for list queries. |
 | `NetCode\Kit\Http\PaginatedResponse` | Builds the `{meta, links}` half of a paginated JSON envelope from the request + page numbers. |
+| `NetCode\Kit\Http\Idempotency` | HTTP idempotency middleware — replays the first successful response for a repeated `Idempotency-Key` on POST, with a concurrency lock. Cache-store agnostic (the host-provided cache repository); register it under a middleware alias. |
 | `NetCode\Kit\Validation\CountryCode` | Validation rule accepting any ISO 3166-1 alpha-2 country code. |
 | `NetCode\Kit\ContextServiceProvider` | Base service provider with `registerBindings()` / `bootContext()` hooks for modular-monolith bounded contexts. |
 

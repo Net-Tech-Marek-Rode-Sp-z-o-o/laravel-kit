@@ -1,8 +1,8 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
     "name": "net-code/laravel-kit",
-    "description": "Small, reusable conventions for building Laravel REST APIs: a Clock port, sort direction, paginated-response envelope, ISO country-code rule, an OpenAPI error-status attribute, and a base context service provider.",
-    "keywords": ["laravel", "api", "clock", "pagination", "ddd", "conventions"],
+    "description": "Small, reusable conventions for building Laravel REST APIs: a Clock port, sort direction, paginated-response envelope, an idempotency middleware, ISO country-code rule, and a base context service provider.",
+    "keywords": ["laravel", "api", "clock", "pagination", "idempotency", "ddd", "conventions"],
     "type": "library",
     "license": "MIT",
     "require": {
@@ -13,6 +13,7 @@
         "symfony/intl": "^8.1"
     },
     "require-dev": {
+        "illuminate/cache": "^13.0",
         "illuminate/translation": "^13.0",
         "laravel/pint": "^1.27",
         "phpstan/phpstan": "^2.1",
